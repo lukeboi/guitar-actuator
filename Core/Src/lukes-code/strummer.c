@@ -22,11 +22,11 @@ void set_pulse(int p) {
 
 void strum() {
     if(is_flipped == 0) {
-        set_pulse(20);
+        set_pulse(STRUMMED_ON_POSITION);
         is_flipped = 1;
     }
     else {
-        set_pulse(12);
+        set_pulse(STRUMMED_OFF_POSITION);
         is_flipped = 0;
     }
 }

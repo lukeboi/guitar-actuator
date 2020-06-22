@@ -3,8 +3,16 @@
 
 //#include "stm32l4xx_hal_def.h"
 
-#define STRUMMED_OFF_POSITION 6
-#define STRUMMED_ON_POSITION 10
+//a difference of 8 is a good starting point
+//23 = all the way over/right
+
+
+#define STRUMMED_OFF_POSITION 15
+#define STRUMMED_ON_POSITION 16
+
+//#define STRUMMED_OFF_POSITION 12
+//#define STRUMMED_ON_POSITION 16//23
+
 
 void passServoPWM(s);
 

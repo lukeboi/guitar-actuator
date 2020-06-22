@@ -101,25 +101,20 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-//  blink(3);
-  strum();
+  blink(3);
   toggleLED();
+  strum();
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 	if(HAL_UART_Receive(&huart1, &message, 1, HAL_MAX_DELAY) == HAL_OK) {
-//		toggleLED();
 		if(process_midi_message(message)) {
 			toggleLED();
 			strum();
-
-			//toggleLED();
 		}
 	}
-	//strum();
-	//HAL_Delay(5000);
   }
   /* USER CODE END 3 */
 }
