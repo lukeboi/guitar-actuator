@@ -525,7 +525,7 @@ void strum() {
  80003a8:	2b00      	cmp	r3, #0
  80003aa:	d106      	bne.n	80003ba <strum+0x1a>
         set_pulse(STRUMMED_ON_POSITION);
- 80003ac:	2010      	movs	r0, #16
+ 80003ac:	2014      	movs	r0, #20
  80003ae:	f7ff ffbf 	bl	8000330 <set_pulse>
         is_flipped = 1;
  80003b2:	4b06      	ldr	r3, [pc, #24]	; (80003cc <strum+0x2c>)
@@ -539,7 +539,7 @@ void strum() {
 }
  80003b8:	e005      	b.n	80003c6 <strum+0x26>
         set_pulse(STRUMMED_OFF_POSITION);
- 80003ba:	200f      	movs	r0, #15
+ 80003ba:	200c      	movs	r0, #12
  80003bc:	f7ff ffb8 	bl	8000330 <set_pulse>
         is_flipped = 0;
  80003c0:	4b02      	ldr	r3, [pc, #8]	; (80003cc <strum+0x2c>)
