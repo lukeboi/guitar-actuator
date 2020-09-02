@@ -8,3 +8,5 @@ For the designs of the board, see [here](https://github.com/lukeboi/guitar-board
 For an overview of Soundtrack as a whole, see [here](https://www.lukefarritor.com)
 
 Note to self: you should someday move the customizable parameters to a single file instead of two.
+
+All rights reserved
