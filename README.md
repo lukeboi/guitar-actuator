@@ -9,4 +9,4 @@ For an overview of Soundtrack as a whole, see [here](https://www.lukefarritor.co
 
 Note to self: you should someday move the customizable parameters to a single file instead of two.
 
-All rights reserved
+All rights reserved.
