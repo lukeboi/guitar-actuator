@@ -289,14 +289,13 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 void blink(int x) {
 	for(int i = 0; i < x * 2; i++) {
-		HAL_GPIO_TogglePin(led_GPIO_Port, led_Pin);
+		toggleLED();
 		HAL_Delay(100);
 	}
 }
 
-int toggleLED() {
+void toggleLED() {
 	HAL_GPIO_TogglePin(led_GPIO_Port, led_Pin);
-	return 0;
 }
 
 
