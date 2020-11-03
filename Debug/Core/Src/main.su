@@ -4,5 +4,5 @@ main.c:170:13:MX_TIM1_Init	80	static
 main.c:235:13:MX_USART1_UART_Init	8	static
 main.c:270:13:MX_GPIO_Init	32	static
 main.c:290:6:blink	24	static
-main.c:297:5:toggleLED	8	static
-main.c:309:6:Error_Handler	8	static
+main.c:297:6:toggleLED	8	static
+main.c:308:6:Error_Handler	8	static

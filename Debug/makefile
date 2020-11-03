@@ -16,6 +16,12 @@ RM := rm -rf
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(strip $(S_DEPS)),)
+-include $(S_DEPS)
+endif
+ifneq ($(strip $(S_UPPER_DEPS)),)
+-include $(S_UPPER_DEPS)
+endif
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
 endif
@@ -33,13 +39,16 @@ default.size.stdout \
 OBJDUMP_LIST += \
 guitar-actuator-board.list \
 
+OBJCOPY_BIN += \
+guitar-actuator-board.bin \
+
 
 # All Target
 all: guitar-actuator-board.elf secondary-outputs
 
 # Tool invocations
-guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) C:\Users\Shane\ Farritor\Documents\workspace_1.0.2\workspace_1.0.2\guitar-actuator-board\STM32F030F4PX_FLASH.ld
-	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\Shane Farritor\Documents\workspace_1.0.2\workspace_1.0.2\guitar-actuator-board\STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) C:\Users\lukef\OneDrive\Documents\GitHub\guitar-actuator\STM32F030F4PX_FLASH.ld
+	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\lukef\OneDrive\Documents\GitHub\guitar-actuator\STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -53,12 +62,17 @@ guitar-actuator-board.list: $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
+guitar-actuator-board.bin: $(EXECUTABLES)
+	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "guitar-actuator-board.bin"
+	@echo 'Finished building: $@'
+	@echo ' '
+
 # Other Targets
 clean:
 	-$(RM) *
 	-@echo ' '
 
-secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)
+secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
 .PHONY: all clean dependents
 .SECONDARY:

@@ -2,7 +2,7 @@
 #include "stm32f0xx_hal.h"
 
 int CURRENT_STATUS = 0;
-int note = 67; //what note on the keyboard we should respond to. Each guitar is one note. note 69 = A4 = the A above middle C
+int note = 41; //what note on the keyboard we should respond to. Each guitar is one note. note 69 = A4 = the A above middle C
 
 //note control
 #define STATUS_NOTE_ON 0b10010000
