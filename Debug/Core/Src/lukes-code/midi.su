@@ -1,4 +1,4 @@
-midi.c:28:5:process_midi_message	16	static
-midi.c:85:9:get_one_byte	16	static
-midi.c:91:5:note_on	24	static
-midi.c:102:5:note_off	8	static
+midi.c:43:5:process_midi_message	16	static
+midi.c:96:9:get_one_byte	16	static
+midi.c:102:5:note_on	24	static
+midi.c:113:5:note_off	8	static

@@ -29,6 +29,11 @@ endif
 
 -include ../makefile.defs
 
+BUILD_ARTIFACT_NAME := guitar-actuator-board
+BUILD_ARTIFACT_EXTENSION := elf
+BUILD_ARTIFACT_PREFIX := 
+BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME).$(BUILD_ARTIFACT_EXTENSION)
+
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
 guitar-actuator-board.elf \
@@ -44,11 +49,14 @@ guitar-actuator-board.bin \
 
 
 # All Target
-all: guitar-actuator-board.elf secondary-outputs
+all: main-build
+
+# Main-build Target
+main-build: guitar-actuator-board.elf secondary-outputs
 
 # Tool invocations
-guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) C:\Users\lukef\OneDrive\Documents\GitHub\guitar-actuator\STM32F030F4PX_FLASH.ld
-	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\lukef\OneDrive\Documents\GitHub\guitar-actuator\STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) /Users/lfarritor3/Documents/GitHub/guitar-actuator/STM32F030F4PX_FLASH.ld
+	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"/Users/lfarritor3/Documents/GitHub/guitar-actuator/STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -74,7 +82,14 @@ clean:
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST) $(OBJCOPY_BIN)
 
-.PHONY: all clean dependents
+fail-specified-linker-script-missing:
+	@echo 'Error: Cannot find the specified linker script. Check the linker settings in the build configuration.'
+	@exit 2
+
+warn-no-linker-script-specified:
+	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
+
+.PHONY: all clean dependents fail-specified-linker-script-missing warn-no-linker-script-specified
 .SECONDARY:
 
 -include ../makefile.targets

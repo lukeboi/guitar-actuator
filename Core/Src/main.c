@@ -17,7 +17,6 @@
   ******************************************************************************
   */
 /* USER CODE END Header */
-
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 
@@ -56,12 +55,42 @@ static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void toggleLED();
+extern int note;
+
+extern config_t flash_config;
+extern config_t config;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+extern message_state_t state;
 /* USER CODE END 0 */
+
+
+void Write_Flash()
+{
+
+     HAL_FLASH_Unlock();
+
+     int startAddress = 0x08003c00;
+     FLASH_EraseInitTypeDef flashPageEraseConfig;
+     flashPageEraseConfig.NbPages = 1;
+     flashPageEraseConfig.PageAddress = startAddress;
+     flashPageEraseConfig.TypeErase = FLASH_TYPEERASE_PAGES;
+     uint32_t pageErrors;
+     HAL_FLASHEx_Erase(&flashPageEraseConfig, &pageErrors);
+     uint32_t* data = (uint32_t*)&config;
+     for(int i = 0; i<sizeof(config_t); i++) {
+    	 HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, startAddress+(4*i), data[i]);
+     }
+     HAL_FLASH_Lock();
+
+//     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
+//     FLASH_Erase_Sector(FLASH_SECTOR_6, VOLTAGE_RANGE_3);
+//     HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FlashAddress, data);
+//     HAL_FLASH_Lock();
+}
+
 
 /**
   * @brief  The application entry point.
@@ -70,9 +99,8 @@ void toggleLED();
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+//Write_Flash();
   /* USER CODE END 1 */
-  
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -80,7 +108,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
+  Write_Flash();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -104,16 +132,22 @@ int main(void)
   blink(3);
   toggleLED();
   strum();
+
+//  HAL_UART_AbortReceive(&huart1);
+
   while (1)
   {
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
 	if(HAL_UART_Receive(&huart1, &message, 1, HAL_MAX_DELAY) == HAL_OK) {
-		if(process_midi_message(message)) {
-			toggleLED();
-			strum();
-		}
+		process_midi_message(message);
+	}
+
+	if (state == STATE_PLAY_NOTE) {
+		toggleLED();
+		strum();
+		state = STATE_IDLE;
 	}
   }
   /* USER CODE END 3 */
@@ -129,7 +163,8 @@ void SystemClock_Config(void)
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
 
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the RCC Oscillators according to the specified parameters
+  * in the RCC_OscInitTypeDef structure.
   */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
@@ -142,7 +177,7 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  /** Initializes the CPU, AHB and APB busses clocks 
+  /** Initializes the CPU, AHB and APB buses clocks
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1;
@@ -182,9 +217,9 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 1 */
   htim1.Instance = TIM1;
-  htim1.Init.Prescaler = 4650;
+  htim1.Init.Prescaler = 14;
   htim1.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim1.Init.Period = 100;
+  htim1.Init.Period = 65535;
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
@@ -251,7 +286,8 @@ static void MX_USART1_UART_Init(void)
   huart1.Init.HwFlowCtl = UART_HWCONTROL_NONE;
   huart1.Init.OverSampling = UART_OVERSAMPLING_16;
   huart1.Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
+  huart1.AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_RXOVERRUNDISABLE_INIT;
+  huart1.AdvancedInit.OverrunDisable = UART_ADVFEATURE_OVERRUN_DISABLE;
   if (HAL_UART_Init(&huart1) != HAL_OK)
   {
     Error_Handler();
@@ -321,8 +357,8 @@ void Error_Handler(void)
   * @param  line: assert_param error line source number
   * @retval None
   */
-void assert_failed(char *file, uint32_t line)
-{ 
+void assert_failed(uint8_t *file, uint32_t line)
+{
   /* USER CODE BEGIN 6 */
   /* User can add his own implementation to report the file name and line number,
      tex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */

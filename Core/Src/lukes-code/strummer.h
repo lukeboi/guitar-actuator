@@ -7,8 +7,10 @@
 //23 = all the way over/right
 
 
-#define STRUMMED_OFF_POSITION 11
-#define STRUMMED_ON_POSITION 17
+// Minimum period: 3278
+
+#define STRUMMED_OFF_POSITION 3278
+#define STRUMMED_ON_POSITION 6557
 
 //#define STRUMMED_OFF_POSITION 12
 //#define STRUMMED_ON_POSITION 16//23

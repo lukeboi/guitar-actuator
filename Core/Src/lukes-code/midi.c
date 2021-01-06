@@ -2,7 +2,16 @@
 #include "stm32f0xx_hal.h"
 
 int CURRENT_STATUS = 0;
-int note = 41; //what note on the keyboard we should respond to. Each guitar is one note. note 69 = A4 = the A above middle C
+
+//__attribute__((__section__(".user_data")))
+//int note = 42; //what note on the keyboard we should respond to. Each guitar is one note. note 69 = A4 = the A above middle C
+
+
+
+
+__attribute__((__section__(".user_data"))) config_t flash_config = {.note = 41};
+
+config_t config = {.note = 44};
 
 //note control
 #define STATUS_NOTE_ON 0b10010000
@@ -22,7 +31,13 @@ int note_on();
 int note_off();
 uint8_t get_one_byte();
 
+message_state_t state;
+
+uint8_t recived_key;
+uint8_t recived_velocity;
+
 extern UART_HandleTypeDef huart1;
+
 
 //processes a MIDI message. we return a 1 if we need to strum. Some messages can be 2 bytes, so the third byte might just be 0x0.
 int process_midi_message(uint8_t byte1) { //TODO: later change this to array
@@ -33,51 +48,47 @@ int process_midi_message(uint8_t byte1) { //TODO: later change this to array
 
         switch (byte1) { //now, interpret the message itself
         case STATUS_NOTE_ON:
-        	return note_on();
+        	state = STATE_READ_KEY;
             break;
 
         case STATUS_NOTE_OFF:
-            return note_off();
             break;
 
         case STATUS_AFTERTOUCH:
-            return 0;
             break;
 
         case STATUS_CONTROL_CHANGE:
-            return 0;
             break;
 
         case STATUS_PROGRAM_CHANGE:
-            return 0;
             break;
 
         case STATUS_CHANNEL_PRESSURE:
-            return 0;
             break;
 
         case STATUS_PITCH_BEND:
-            return 0;
             break;
 
         default:
-            return 0;
             break;
         }
     }
     else {
         //if the first byte isn’t a status byte, then we are in the previous status. aka running status. depending on current status
-        switch(CURRENT_STATUS) {
-        case STATUS_NOTE_ON:
-            return note_on();
-            break;
+        switch(state) {
+        case STATE_READ_KEY:
+        	recived_key = byte1;
+        	state = STATE_READ_VELOCITY;
+        	break;
 
-        case STATUS_NOTE_OFF:
-            return note_off();
-            break;
-
-        default:
-            return 0;
+        case STATE_READ_VELOCITY:
+        	recived_velocity = byte1;
+        	if (recived_key == config.note && recived_velocity > 0) {
+        		state = STATE_PLAY_NOTE;
+        	}
+        	else {
+        		state = STATE_IDLE;
+        	}
         }
     }
 }
@@ -91,7 +102,7 @@ uint8_t get_one_byte() {
 int note_on() {
 	uint8_t a = get_one_byte();
 	uint8_t b = get_one_byte();
-	if(a == note) {
+	if(a == config.note) {
 		if(b != 0) {
 			return 1;
 		}

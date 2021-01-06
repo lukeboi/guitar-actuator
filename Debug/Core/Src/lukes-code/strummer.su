@@ -1,3 +1,3 @@
-strummer.c:8:6:set_pulse	56	static
-strummer.c:23:6:strum	8	static
-strummer.c:34:6:pass_servo_pwm	16	static
+strummer.c:8:6:set_pulse	16	static
+strummer.c:26:6:strum	8	static
+strummer.c:37:6:pass_servo_pwm	16	static
