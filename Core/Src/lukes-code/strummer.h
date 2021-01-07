@@ -1,4 +1,4 @@
-#ifndef STRUMMER_H //prevent recursive inclusion
+#ifndef STRUMMER_H
 #define STRUMMER_H
 
 // Minimum period: 3278 - equivalent to 1ms

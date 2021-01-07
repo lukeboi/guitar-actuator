@@ -1,9 +1,3 @@
-/*
- * config.c
- *
- *  Created on: Jan 6, 2021
- *      Author: lfarritor3
- */
 #include "config.h"
 #include "stm32f0xx_hal.h"
 #include <stdbool.h>

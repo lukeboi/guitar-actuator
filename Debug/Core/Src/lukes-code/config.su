@@ -1,2 +1,2 @@
-config.c:16:6:init_config	40	static
-config.c:31:6:Write_Flash	72	static
+config.c:10:6:init_config	40	static
+config.c:25:6:Write_Flash	72	static

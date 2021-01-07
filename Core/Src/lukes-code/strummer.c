@@ -1,20 +1,23 @@
+#include <stdbool.h>
 #include "strummer.h"
 #include "./main.h"
 
-int is_flipped = 0;
+bool is_flipped = false;
 
+// Sets servo PWM pulse
 void set_pulse(int p) {
 	TIM1->CCR2 = p;
 }
 
+// Moves the servo across the guitar strings once
 void strum() {
-    if(is_flipped == 0) {
+    if(is_flipped == false) {
         set_pulse(STRUMMED_ON_POSITION);
-        is_flipped = 1;
+        is_flipped = true;
     }
     else {
         set_pulse(STRUMMED_OFF_POSITION);
-        is_flipped = 0;
+        is_flipped = false;
     }
 }
 

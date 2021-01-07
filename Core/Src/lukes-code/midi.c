@@ -18,10 +18,6 @@ int CURRENT_STATUS = 0;
 //system message
 #define STATUS_SYSTEM 0xF;
 
-int note_on();
-int note_off();
-uint8_t get_one_byte();
-
 message_state_t state;
 programming_state_t programming_state;
 
@@ -122,26 +118,4 @@ void process_programming_state(uint8_t note) {
 		}
 		break;
 	}
-}
-
-uint8_t get_one_byte() {
-	uint8_t b;
-	HAL_UART_Receive(&huart1, &b, 1, HAL_MAX_DELAY);
-	return b;
-}
-
-int note_on() {
-	uint8_t a = get_one_byte();
-	uint8_t b = get_one_byte();
-	if(a == config.note) {
-		if(b != 0) {
-			return 1;
-		}
-	}
-	return 0;
-}
-
-int note_off() {
-	get_one_byte();
-	get_one_byte();
 }

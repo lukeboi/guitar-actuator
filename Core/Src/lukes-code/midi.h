@@ -6,8 +6,6 @@
 //this midi device is always on channel 0, but we can change that later
 //todo: see if this can be scoped better
 
-int process_midi_message(uint8_t byte1);
-
 typedef enum {
 	STATE_IDLE,
 	STATE_NOTE_ON_MESSAGE,
@@ -28,5 +26,7 @@ typedef enum {
 
 extern message_state_t state;
 extern programming_state_t programming_state;
+
+int process_midi_message(uint8_t byte1);
 
 #endif

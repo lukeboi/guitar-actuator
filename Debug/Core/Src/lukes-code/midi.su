@@ -1,5 +1,2 @@
 midi.c:36:5:process_midi_message	16	static
 midi.c:89:6:process_programming_state	16	static
-midi.c:127:9:get_one_byte	16	static
-midi.c:133:5:note_on	24	static
-midi.c:144:5:note_off	8	static
