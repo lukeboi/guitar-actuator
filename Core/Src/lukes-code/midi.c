@@ -1,17 +1,8 @@
 #include "midi.h"
+#include "config.h"
 #include "stm32f0xx_hal.h"
 
 int CURRENT_STATUS = 0;
-
-//__attribute__((__section__(".user_data")))
-//int note = 42; //what note on the keyboard we should respond to. Each guitar is one note. note 69 = A4 = the A above middle C
-
-
-
-
-__attribute__((__section__(".user_data"))) config_t flash_config = {.note = 41};
-
-config_t config = {.note = 44};
 
 //note control
 #define STATUS_NOTE_ON 0b10010000
@@ -32,17 +23,17 @@ int note_off();
 uint8_t get_one_byte();
 
 message_state_t state;
+programming_state_t programming_state;
 
 uint8_t recived_key;
 uint8_t recived_velocity;
 
 extern UART_HandleTypeDef huart1;
+extern config_t config;
 
 
 //processes a MIDI message. we return a 1 if we need to strum. Some messages can be 2 bytes, so the third byte might just be 0x0.
 int process_midi_message(uint8_t byte1) { //TODO: later change this to array
-
-
 	if(byte1 >= 128) { //check to see if the first bit of the first byte this means that its a system message and we need to switch to that status
         CURRENT_STATUS = byte1; //unused for now
 
@@ -83,14 +74,54 @@ int process_midi_message(uint8_t byte1) { //TODO: later change this to array
 
         case STATE_READ_VELOCITY:
         	recived_velocity = byte1;
-        	if (recived_key == config.note && recived_velocity > 0) {
+        	if (recived_key == ram_config.note && recived_velocity > 0) {
         		state = STATE_PLAY_NOTE;
         	}
         	else {
         		state = STATE_IDLE;
         	}
+    		process_programming_state(recived_key);
         }
     }
+}
+
+// State machine for programming state (programming state is for changing paramaters in flash)
+void process_programming_state(uint8_t note) {
+	switch(programming_state) {
+	case PASSCODE_NONE:
+		if (note == 84) {
+			programming_state = PASSCODE_1;
+		}
+		else {
+			programming_state = PASSCODE_NONE;
+		}
+		break;
+	case PASSCODE_1:
+		if (note == 82) {
+			programming_state = PASSCODE_2;
+		}
+		else {
+			programming_state = PASSCODE_NONE;
+		}
+		break;
+	case PASSCODE_2:
+		if (note == 83) {
+			programming_state = PASSCODE_3;
+		}
+		else {
+			programming_state = PASSCODE_NONE;
+		}
+		break;
+	case PASSCODE_3:
+		if (note == 81) {
+			programming_state = PROGRAMMING;
+			state = STATE_PROGRAMMING;
+		}
+		else {
+			programming_state = PASSCODE_NONE;
+		}
+		break;
+	}
 }
 
 uint8_t get_one_byte() {

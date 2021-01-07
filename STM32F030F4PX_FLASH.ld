@@ -77,7 +77,7 @@ SECTIONS
     . = ALIGN(4);
   } >FLASH
  
-  .user_data :
+  .user_data (NOLOAD) :
   {
     . = ALIGN(4);
      KEEP(*(.user_data))

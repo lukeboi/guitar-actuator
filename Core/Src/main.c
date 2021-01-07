@@ -23,6 +23,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "lukes-code/midi.h"
+#include "lukes-code/config.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -55,42 +56,12 @@ static void MX_TIM1_Init(void);
 static void MX_USART1_UART_Init(void);
 /* USER CODE BEGIN PFP */
 void toggleLED();
-extern int note;
-
-extern config_t flash_config;
-extern config_t config;
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 extern message_state_t state;
 /* USER CODE END 0 */
-
-
-void Write_Flash()
-{
-
-     HAL_FLASH_Unlock();
-
-     int startAddress = 0x08003c00;
-     FLASH_EraseInitTypeDef flashPageEraseConfig;
-     flashPageEraseConfig.NbPages = 1;
-     flashPageEraseConfig.PageAddress = startAddress;
-     flashPageEraseConfig.TypeErase = FLASH_TYPEERASE_PAGES;
-     uint32_t pageErrors;
-     HAL_FLASHEx_Erase(&flashPageEraseConfig, &pageErrors);
-     uint32_t* data = (uint32_t*)&config;
-     for(int i = 0; i<sizeof(config_t); i++) {
-    	 HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, startAddress+(4*i), data[i]);
-     }
-     HAL_FLASH_Lock();
-
-//     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_OPERR | FLASH_FLAG_WRPERR | FLASH_FLAG_PGAERR | FLASH_FLAG_PGSERR );
-//     FLASH_Erase_Sector(FLASH_SECTOR_6, VOLTAGE_RANGE_3);
-//     HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FlashAddress, data);
-//     HAL_FLASH_Lock();
-}
-
 
 /**
   * @brief  The application entry point.
@@ -108,7 +79,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-  Write_Flash();
   /* USER CODE END Init */
 
   /* Configure the system clock */
@@ -124,16 +94,14 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_2);
-  pass_servo_pwm(&htim1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  init_config();
   blink(3);
   toggleLED();
   strum();
-
-//  HAL_UART_AbortReceive(&huart1);
 
   while (1)
   {
@@ -323,6 +291,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+// Blinks debug LED a given number of times
 void blink(int x) {
 	for(int i = 0; i < x * 2; i++) {
 		toggleLED();
@@ -330,11 +299,10 @@ void blink(int x) {
 	}
 }
 
+// Toggles debug LED on board
 void toggleLED() {
 	HAL_GPIO_TogglePin(led_GPIO_Port, led_Pin);
 }
-
-
 /* USER CODE END 4 */
 
 /**

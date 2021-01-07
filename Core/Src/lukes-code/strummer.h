@@ -1,20 +1,11 @@
 #ifndef STRUMMER_H //prevent recursive inclusion
 #define STRUMMER_H
 
-//#include "stm32l4xx_hal_def.h"
-
-//a difference of 8 is a good starting point
-//23 = all the way over/right
-
-
-// Minimum period: 3278
+// Minimum period: 3278 - equivalent to 1ms
+// Maximum period: 6557 - equivalent to 2ms
 
 #define STRUMMED_OFF_POSITION 3278
 #define STRUMMED_ON_POSITION 6557
-
-//#define STRUMMED_OFF_POSITION 12
-//#define STRUMMED_ON_POSITION 16//23
-
 
 void passServoPWM(s);
 

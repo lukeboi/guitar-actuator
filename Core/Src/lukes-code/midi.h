@@ -8,21 +8,25 @@
 
 int process_midi_message(uint8_t byte1);
 
-typedef struct config {
-	uint32_t note;
-	uint32_t strummed_on_position;
-	uint32_t strummed_off_position;
-} config_t;
-
 typedef enum {
 	STATE_IDLE,
 	STATE_NOTE_ON_MESSAGE,
 	STATE_READ_KEY,
 	STATE_READ_VELOCITY,
-	STATE_PLAY_NOTE
+	STATE_PLAY_NOTE,
+	STATE_PROGRAMMING
 
 } message_state_t;
 
+typedef enum {
+	PASSCODE_NONE,
+	PASSCODE_1,
+	PASSCODE_2,
+	PASSCODE_3,
+	PROGRAMMING
+} programming_state_t;
+
 extern message_state_t state;
+extern programming_state_t programming_state;
 
 #endif
