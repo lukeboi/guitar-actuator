@@ -1,5 +1,5 @@
 # guitar-actuator
-This is the codebase for the STM32 microcontrollers on the guitar actuator boards in the project Soundtrack. It's written in C and should be opened in STM32CubeIDE.
+This is the codebase for the STM32 microcontrollers on the guitar controller boards in the guitar project Soundtrack. It's written in C and should be opened in STM32CubeIDE.
 Codebase features:
 - Written-from-scratch implementation of a subset of the MIDI protocol, featuring two layered state machines. It looks for MIDI note on messages recivied by the board.
 - Servo control. If the board recives a MIDI on message for the MIDI note corresponding to this board, then we move the servo to strum the guitar.
