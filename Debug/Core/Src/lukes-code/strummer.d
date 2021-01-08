@@ -1,6 +1,6 @@
 Core/Src/lukes-code/strummer.o: ../Core/Src/lukes-code/strummer.c \
- ../Core/Src/lukes-code/strummer.h ../Core/Inc/./main.h \
- ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
+ ../Core/Src/lukes-code/strummer.h ../Core/Src/lukes-code/config.h \
+ ../Core/Inc/./main.h ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
  ../Core/Inc/stm32f0xx_hal_conf.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_def.h \
@@ -31,6 +31,8 @@ Core/Src/lukes-code/strummer.o: ../Core/Src/lukes-code/strummer.c \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_uart_ex.h
 
 ../Core/Src/lukes-code/strummer.h:
+
+../Core/Src/lukes-code/config.h:
 
 ../Core/Inc/./main.h:
 

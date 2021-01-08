@@ -1,2 +1,2 @@
-strummer.c:8:6:set_pulse	16	static
-strummer.c:13:6:strum	8	static
+strummer.c:9:6:set_pulse	16	static
+strummer.c:14:6:strum	8	static

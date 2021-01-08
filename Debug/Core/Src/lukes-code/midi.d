@@ -1,5 +1,6 @@
 Core/Src/lukes-code/midi.o: ../Core/Src/lukes-code/midi.c \
  ../Core/Src/lukes-code/midi.h ../Core/Src/lukes-code/config.h \
+ ../Core/Src/lukes-code/strummer.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h \
  ../Core/Inc/stm32f0xx_hal_conf.h \
  ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal_rcc.h \
@@ -33,6 +34,8 @@ Core/Src/lukes-code/midi.o: ../Core/Src/lukes-code/midi.c \
 ../Core/Src/lukes-code/midi.h:
 
 ../Core/Src/lukes-code/config.h:
+
+../Core/Src/lukes-code/strummer.h:
 
 ../Drivers/STM32F0xx_HAL_Driver/Inc/stm32f0xx_hal.h:
 

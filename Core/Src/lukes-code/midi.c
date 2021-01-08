@@ -1,5 +1,6 @@
 #include "midi.h"
 #include "config.h"
+#include "strummer.h"
 #include "stm32f0xx_hal.h"
 
 int CURRENT_STATUS = 0;
@@ -21,16 +22,20 @@ int CURRENT_STATUS = 0;
 message_state_t state;
 programming_state_t programming_state;
 
-uint8_t recived_key;
-uint8_t recived_velocity;
+uint_fast8_t recived_key;
+uint_fast8_t recived_velocity;
+uint_fast8_t recived_control_number;
+uint_fast8_t recived_modulation;
+uint_fast8_t record_scratch_pulse;
 
 extern UART_HandleTypeDef huart1;
 extern config_t config;
 
+void process_programming_state(uint8_t note);
 
-//processes a MIDI message. we return a 1 if we need to strum. Some messages can be 2 bytes, so the third byte might just be 0x0.
-int process_midi_message(uint8_t byte1) { //TODO: later change this to array
-	if(byte1 >= 128) { //check to see if the first bit of the first byte this means that its a system message and we need to switch to that status
+//processes a MIDI message
+void process_midi_message(uint8_t byte1) { //TODO: later change this to array
+	if(byte1 & 0x80) { //check to see if the first bit of the first byte this means that its a system message and we need to switch to that status
         CURRENT_STATUS = byte1; //unused for now
 
         switch (byte1) { //now, interpret the message itself
@@ -45,6 +50,7 @@ int process_midi_message(uint8_t byte1) { //TODO: later change this to array
             break;
 
         case STATUS_CONTROL_CHANGE:
+        	state = STATE_CONTROL_CHANGE;
             break;
 
         case STATUS_PROGRAM_CHANGE:
@@ -77,6 +83,25 @@ int process_midi_message(uint8_t byte1) { //TODO: later change this to array
         		state = STATE_IDLE;
         	}
     		process_programming_state(recived_key);
+    		break;
+
+        case STATE_CONTROL_CHANGE:
+        	recived_control_number = byte1;
+        	if(recived_control_number == 1) {
+        		state = STATE_MODULATION_CHANGE;
+        	}
+        	break;
+
+        case STATE_MODULATION_CHANGE:
+        	recived_modulation = byte1;
+        	if(programming_state == RECORD_SCRATCH) {
+        		record_scratch_pulse = ((MAXIMUM_PWM_POSITION - MINIMUM_PWM_POSITION) * recived_modulation) / 128 + MINIMUM_PWM_POSITION;
+        		set_pulse(record_scratch_pulse);
+        	}
+        	break;
+
+        default:
+        	break;
         }
     }
 }
@@ -117,5 +142,30 @@ void process_programming_state(uint8_t note) {
 			programming_state = PASSCODE_NONE;
 		}
 		break;
+	case PROGRAMMING:
+		if (note == ram_config.note) {
+			programming_state = RECORD_SCRATCH;
+		}
+		else {
+			programming_state = PASSCODE_NONE;
+		}
+		break;
+	case RECORD_SCRATCH:
+		if (note == 77) {
+			ram_config.strummed_off_position = record_scratch_pulse;
+		}
+		else if (note == 79) {
+			ram_config.strummed_on_position = record_scratch_pulse;
+		}
+		else if (note == 84) {
+			Write_Flash();
+		}
+		else {
+			programming_state = PASSCODE_NONE;
+		}
+		break;
+
+    default:
+    	break;
 	}
 }

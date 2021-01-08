@@ -1,7 +1,10 @@
 #include "config.h"
 #include "stm32f0xx_hal.h"
+#include "strummer.h"
+#include <string.h>
 #include <stdbool.h>
 
+bool config_struct_equal(config_t a, config_t b);
 
 __attribute__((__section__(".user_data"))) config_t flash_config;
 config_t ram_config; // Ram config is stored in ram (as opposed to flash)
@@ -12,9 +15,10 @@ void init_config() {
 	// If you want to set new settings, set them here and make overwrite_config true.
 	bool overwrite_config = false;
 	ram_config.note = 45;
+	ram_config.strummed_on_position = MINIMUM_PWM_POSITION;
+	ram_config.strummed_off_position = MAXIMUM_PWM_POSITION;
 
-
-	if(!memcmp(ram_config, flash_config, sizeof(config_t)) && overwrite_config) {
+	if(!config_struct_equal(ram_config, flash_config) && overwrite_config) {
 		Write_Flash();
 	}
 	ram_config = flash_config;
@@ -25,7 +29,7 @@ void init_config() {
 void Write_Flash()
 {
 	// Only write to flash if our config files differ
-	if(memcmp(ram_config, flash_config, sizeof(config_t))) {
+	if(config_struct_equal(ram_config, flash_config)) {
 		return;
 	}
 
@@ -43,4 +47,11 @@ void Write_Flash()
     	HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, startAddress+(4*i), data[i]);
     }
     HAL_FLASH_Lock();
+}
+
+bool config_struct_equal(config_t a, config_t b) {
+	if(a.note == b.note && a.strummed_on_position == b.strummed_on_position && a.strummed_off_position == b.strummed_off_position) {
+		return true;
+	}
+	return false;
 }
