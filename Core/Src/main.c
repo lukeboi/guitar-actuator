@@ -25,6 +25,7 @@
 #include "lukes-code/midi.h"
 #include "lukes-code/strummer.h"
 #include "lukes-code/config.h"
+#include "lukes-code/led.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -102,7 +103,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   init_config();
   blink(3);
-  toggleLED();
+  toggle_led();
   strum();
 
   while (1)
@@ -115,9 +116,9 @@ int main(void)
 	}
 
 	if (state == STATE_PLAY_NOTE) {
-		toggleLED();
+		toggle_led();
 		strum();
-		state = STATE_IDLE;
+		state = STATE_READ_KEY;
 	}
   }
   /* USER CODE END 3 */
@@ -293,18 +294,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-// Blinks debug LED a given number of times
-void blink(int x) {
-	for(int i = 0; i < x * 2; i++) {
-		toggleLED();
-		HAL_Delay(100);
-	}
-}
 
-// Toggles debug LED on board
-void toggleLED() {
-	HAL_GPIO_TogglePin(led_GPIO_Port, led_Pin);
-}
 /* USER CODE END 4 */
 
 /**

@@ -21,7 +21,3 @@ void strum() {
         is_flipped = false;
     }
 }
-
-//void pass_servo_pwm(TIM_HandleTypeDef *s) { //used when the system is being initalized to pass the servo pwm controller. Todo: change to extern statement
-//    servoPWM = s->Instance;
-//}

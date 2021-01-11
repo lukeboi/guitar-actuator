@@ -1,2 +1,2 @@
-midi.c:37:6:process_midi_message	16	static
-midi.c:110:6:process_programming_state	16	static
+midi.c:49:6:process_midi_message	24	static
+midi.c:135:6:process_programming_state	16	static

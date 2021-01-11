@@ -1,9 +1,19 @@
+#include "led.h"
 #include "midi.h"
 #include "config.h"
 #include "strummer.h"
 #include "stm32f0xx_hal.h"
 
 int CURRENT_STATUS = 0;
+
+//notes for use in programming mode
+#define PROGRAMMING_MODE_PASSCODE_1 24
+#define PROGRAMMING_MODE_PASSCODE_2 22
+#define PROGRAMMING_MODE_PASSCODE_3 23
+#define PROGRAMMING_MODE_PASSCODE_4 21
+#define PROGRAMMING_MODE_SAVE_LEFT_POS 25
+#define PROGRAMMING_MODE_SAVE_CHANGES 26
+#define PROGRAMMING_MODE_SAVE_RIGHT_POS 27
 
 //note control
 #define STATUS_NOTE_ON 0b10010000
@@ -33,9 +43,16 @@ extern config_t config;
 
 void process_programming_state(uint8_t note);
 
-//processes a MIDI message
-void process_midi_message(uint8_t byte1) { //TODO: later change this to array
-	if(byte1 & 0x80) { //check to see if the first bit of the first byte this means that its a system message and we need to switch to that status
+int read_key_num = 0;
+
+// Processes MIDI messages using a state machine
+void process_midi_message(uint8_t byte1) {
+	if(byte1 == 41){
+		int i = 2;
+		i += 2;
+	}
+
+	if(byte1 & 0x80) { //check to see if the first bit of the first byte is 1. this means that its a system message and we need to switch to that status
         CURRENT_STATUS = byte1; //unused for now
 
         switch (byte1) { //now, interpret the message itself
@@ -62,6 +79,10 @@ void process_midi_message(uint8_t byte1) { //TODO: later change this to array
         case STATUS_PITCH_BEND:
             break;
 
+        case 254: // Active sensing
+//        	state = STATE_IDLE;
+        	break;
+
         default:
             break;
         }
@@ -77,12 +98,16 @@ void process_midi_message(uint8_t byte1) { //TODO: later change this to array
         case STATE_READ_VELOCITY:
         	recived_velocity = byte1;
         	if (recived_key == ram_config.note && recived_velocity > 0) {
+            	read_key_num += 1;
         		state = STATE_PLAY_NOTE;
         	}
         	else {
-        		state = STATE_IDLE;
+        		state = STATE_READ_KEY;
         	}
-    		process_programming_state(recived_key);
+
+        	if(recived_velocity > 0) {
+        		process_programming_state(recived_key);
+        	}
     		break;
 
         case STATE_CONTROL_CHANGE:
@@ -108,9 +133,10 @@ void process_midi_message(uint8_t byte1) { //TODO: later change this to array
 
 // State machine for programming state (programming state is for changing paramaters in flash)
 void process_programming_state(uint8_t note) {
+	// TODO move these magic numbers to another location
 	switch(programming_state) {
 	case PASSCODE_NONE:
-		if (note == 84) {
+		if (note == PROGRAMMING_MODE_PASSCODE_1) {
 			programming_state = PASSCODE_1;
 		}
 		else {
@@ -118,7 +144,7 @@ void process_programming_state(uint8_t note) {
 		}
 		break;
 	case PASSCODE_1:
-		if (note == 82) {
+		if (note == PROGRAMMING_MODE_PASSCODE_2) {
 			programming_state = PASSCODE_2;
 		}
 		else {
@@ -126,7 +152,7 @@ void process_programming_state(uint8_t note) {
 		}
 		break;
 	case PASSCODE_2:
-		if (note == 83) {
+		if (note == PROGRAMMING_MODE_PASSCODE_3) {
 			programming_state = PASSCODE_3;
 		}
 		else {
@@ -134,9 +160,11 @@ void process_programming_state(uint8_t note) {
 		}
 		break;
 	case PASSCODE_3:
-		if (note == 81) {
+		if (note == PROGRAMMING_MODE_PASSCODE_4) {
 			programming_state = PROGRAMMING;
 			state = STATE_PROGRAMMING;
+			led_on();
+			blink(2);
 		}
 		else {
 			programming_state = PASSCODE_NONE;
@@ -148,16 +176,17 @@ void process_programming_state(uint8_t note) {
 		}
 		else {
 			programming_state = PASSCODE_NONE;
+			led_off();
 		}
 		break;
 	case RECORD_SCRATCH:
-		if (note == 77) {
+		if (note == PROGRAMMING_MODE_SAVE_LEFT_POS) {
 			ram_config.strummed_off_position = record_scratch_pulse;
 		}
-		else if (note == 79) {
+		else if (note == PROGRAMMING_MODE_SAVE_RIGHT_POS) {
 			ram_config.strummed_on_position = record_scratch_pulse;
 		}
-		else if (note == 84) {
+		else if (note == PROGRAMMING_MODE_SAVE_CHANGES) {
 			Write_Flash();
 		}
 		else {

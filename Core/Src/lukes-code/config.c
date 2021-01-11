@@ -13,8 +13,8 @@ config_t ram_config; // Ram config is stored in ram (as opposed to flash)
 void init_config() {
 	// When code is uploaded, if you want to preserve past settings then make overwrite_config false.
 	// If you want to set new settings, set them here and make overwrite_config true.
-	bool overwrite_config = false;
-	ram_config.note = 45;
+	bool overwrite_config = true;
+	ram_config.note = 41;
 	ram_config.strummed_on_position = MINIMUM_PWM_POSITION;
 	ram_config.strummed_off_position = MAXIMUM_PWM_POSITION;
 
@@ -50,7 +50,7 @@ void Write_Flash()
 }
 
 bool config_struct_equal(config_t a, config_t b) {
-	if(a.note == b.note && a.strummed_on_position == b.strummed_on_position && a.strummed_off_position == b.strummed_off_position) {
+	if(a.note == b.note) {
 		return true;
 	}
 	return false;

@@ -1,4 +1,5 @@
 "Core/Src/lukes-code/config.o"
+"Core/Src/lukes-code/led.o"
 "Core/Src/lukes-code/midi.o"
 "Core/Src/lukes-code/strummer.o"
 "Core/Src/main.o"

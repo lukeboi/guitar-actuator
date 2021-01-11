@@ -1,0 +1,4 @@
+led.c:11:6:led_on	8	static
+led.c:16:6:led_off	8	static
+led.c:21:6:toggle_led	8	static
+led.c:26:6:blink	24	static
