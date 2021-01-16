@@ -47,11 +47,6 @@ int read_key_num = 0;
 
 // Processes MIDI messages using a state machine
 void process_midi_message(uint8_t byte1) {
-	if(byte1 == 41){
-		int i = 2;
-		i += 2;
-	}
-
 	if(byte1 & 0x80) { //check to see if the first bit of the first byte is 1. this means that its a system message and we need to switch to that status
         CURRENT_STATUS = byte1; //unused for now
 
@@ -61,6 +56,7 @@ void process_midi_message(uint8_t byte1) {
             break;
 
         case STATUS_NOTE_OFF:
+//        	state = STATE_NOTE_OFF_READ_KEY;
             break;
 
         case STATUS_AFTERTOUCH:
@@ -94,6 +90,13 @@ void process_midi_message(uint8_t byte1) {
         	recived_key = byte1;
         	state = STATE_READ_VELOCITY;
         	break;
+
+//        case STATE_NOTE_OFF_READ_KEY:
+//        	state = STATE_NOTE_OFF_READ_VELOCITY;
+//        	break;
+
+//        case STATE_NOTE
+
 
         case STATE_READ_VELOCITY:
         	recived_velocity = byte1;

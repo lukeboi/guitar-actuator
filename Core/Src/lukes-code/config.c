@@ -14,9 +14,9 @@ void init_config() {
 	// When code is uploaded, if you want to preserve past settings then make overwrite_config false.
 	// If you want to set new settings, set them here and make overwrite_config true.
 	bool overwrite_config = true;
-	ram_config.note = 41;
-	ram_config.strummed_on_position = MINIMUM_PWM_POSITION;
-	ram_config.strummed_off_position = MAXIMUM_PWM_POSITION;
+	ram_config.note = 36;
+	ram_config.strummed_on_position = flash_config.strummed_on_position;
+	ram_config.strummed_off_position = flash_config.strummed_on_position;
 
 	if(!config_struct_equal(ram_config, flash_config) && overwrite_config) {
 		Write_Flash();
@@ -29,9 +29,9 @@ void init_config() {
 void Write_Flash()
 {
 	// Only write to flash if our config files differ
-	if(config_struct_equal(ram_config, flash_config)) {
-		return;
-	}
+//	if(config_struct_equal(ram_config, flash_config)) {
+//		return;
+//	}
 
     HAL_FLASH_Unlock();
 
