@@ -2,11 +2,11 @@ stm32f0xx_hal_tim_ex.c:136:19:HAL_TIMEx_HallSensor_Init	48	static
 stm32f0xx_hal_tim_ex.c:237:19:HAL_TIMEx_HallSensor_DeInit	16	static
 stm32f0xx_hal_tim_ex.c:282:13:HAL_TIMEx_HallSensor_MspInit	16	static
 stm32f0xx_hal_tim_ex.c:297:13:HAL_TIMEx_HallSensor_MspDeInit	16	static
-stm32f0xx_hal_tim_ex.c:312:19:HAL_TIMEx_HallSensor_Start	24	static
+stm32f0xx_hal_tim_ex.c:312:19:HAL_TIMEx_HallSensor_Start	40	static
 stm32f0xx_hal_tim_ex.c:365:19:HAL_TIMEx_HallSensor_Stop	16	static
-stm32f0xx_hal_tim_ex.c:392:19:HAL_TIMEx_HallSensor_Start_IT	24	static
+stm32f0xx_hal_tim_ex.c:392:19:HAL_TIMEx_HallSensor_Start_IT	40	static
 stm32f0xx_hal_tim_ex.c:448:19:HAL_TIMEx_HallSensor_Stop_IT	16	static
-stm32f0xx_hal_tim_ex.c:480:19:HAL_TIMEx_HallSensor_Start_DMA	32	static
+stm32f0xx_hal_tim_ex.c:480:19:HAL_TIMEx_HallSensor_Start_DMA	40	static
 stm32f0xx_hal_tim_ex.c:555:19:HAL_TIMEx_HallSensor_Stop_DMA	16	static
 stm32f0xx_hal_tim_ex.c:616:19:HAL_TIMEx_OCN_Start	24	static
 stm32f0xx_hal_tim_ex.c:667:19:HAL_TIMEx_OCN_Stop	16	static

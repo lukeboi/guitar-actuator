@@ -14,7 +14,7 @@ void init_config() {
 	// When code is uploaded, if you want to preserve past settings then make overwrite_config false.
 	// If you want to set new settings, set them here and make overwrite_config true.
 	bool overwrite_config = true;
-	ram_config.note = 36;
+	ram_config.note = 35;
 	ram_config.strummed_on_position = flash_config.strummed_on_position;
 	ram_config.strummed_off_position = flash_config.strummed_on_position;
 

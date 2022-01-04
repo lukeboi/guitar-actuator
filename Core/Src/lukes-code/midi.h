@@ -35,6 +35,6 @@ typedef enum {
 extern message_state_t state;
 extern programming_state_t programming_state;
 
-void process_midi_message(uint8_t byte1);
+void MIDI_process(uint8_t byte1);
 
 #endif

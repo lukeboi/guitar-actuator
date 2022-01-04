@@ -41,12 +41,12 @@ uint_fast8_t record_scratch_pulse;
 extern UART_HandleTypeDef huart1;
 extern config_t config;
 
-void process_programming_state(uint8_t note);
+static void _process_programming_state(uint8_t note);
 
 int read_key_num = 0;
 
 // Processes MIDI messages using a state machine
-void process_midi_message(uint8_t byte1) {
+void MIDI_process(uint8_t byte1) {
 	if(byte1 & 0x80) { //check to see if the first bit of the first byte is 1. this means that its a system message and we need to switch to that status
         CURRENT_STATUS = byte1; //unused for now
 
@@ -109,7 +109,7 @@ void process_midi_message(uint8_t byte1) {
         	}
 
         	if(recived_velocity > 0) {
-        		process_programming_state(recived_key);
+        		_process_programming_state(recived_key);
         	}
     		break;
 
@@ -135,7 +135,7 @@ void process_midi_message(uint8_t byte1) {
 }
 
 // State machine for programming state (programming state is for changing paramaters in flash)
-void process_programming_state(uint8_t note) {
+void _process_programming_state(uint8_t note) {
 	// TODO move these magic numbers to another location
 	switch(programming_state) {
 	case PASSCODE_NONE:

@@ -1,5 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
+# Toolchain: GNU Tools for STM32 (9-2020-q2-update)
 ################################################################################
 
 -include ../makefile.init
@@ -29,6 +30,12 @@ endif
 
 -include ../makefile.defs
 
+OPTIONAL_TOOL_DEPS := \
+$(wildcard ../makefile.defs) \
+$(wildcard ../makefile.init) \
+$(wildcard ../makefile.targets) \
+
+
 BUILD_ARTIFACT_NAME := guitar-actuator-board
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX := 
@@ -55,22 +62,22 @@ all: main-build
 main-build: guitar-actuator-board.elf secondary-outputs
 
 # Tool invocations
-guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) /Users/lfarritor3/Documents/GitHub/guitar-actuator/STM32F030F4PX_FLASH.ld
-	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"/Users/lfarritor3/Documents/GitHub/guitar-actuator/STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) /Users/lukefarritor/Documents/Github/guitar-actuator/STM32F030F4PX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"/Users/lukefarritor/Documents/Github/guitar-actuator/STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
-default.size.stdout: $(EXECUTABLES)
+default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-size  $(EXECUTABLES)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-guitar-actuator-board.list: $(EXECUTABLES)
+guitar-actuator-board.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "guitar-actuator-board.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
-guitar-actuator-board.bin: $(EXECUTABLES)
+guitar-actuator-board.bin: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	arm-none-eabi-objcopy  -O binary $(EXECUTABLES) "guitar-actuator-board.bin"
 	@echo 'Finished building: $@'
 	@echo ' '

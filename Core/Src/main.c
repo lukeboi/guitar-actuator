@@ -112,7 +112,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 	if(HAL_UART_Receive(&huart1, &message, 1, HAL_MAX_DELAY) == HAL_OK) {
-		process_midi_message(message);
+		MIDI_process(message);
 	}
 
 	if (state == STATE_PLAY_NOTE) {
