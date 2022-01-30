@@ -76,7 +76,6 @@ void MIDI_process(uint8_t byte1) {
             break;
 
         case 254: // Active sensing
-//        	state = STATE_IDLE;
         	break;
 
         default:
@@ -136,7 +135,6 @@ void MIDI_process(uint8_t byte1) {
 
 // State machine for programming state (programming state is for changing paramaters in flash)
 void _process_programming_state(uint8_t note) {
-	// TODO move these magic numbers to another location
 	switch(programming_state) {
 	case PASSCODE_NONE:
 		if (note == PROGRAMMING_MODE_PASSCODE_1) {

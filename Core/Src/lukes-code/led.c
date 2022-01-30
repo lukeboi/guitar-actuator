@@ -1,12 +1,5 @@
 #include "./main.h"
 
-/*
- * led.c
- *
- *  Created on: Jan 10, 2021
- *      Author: lfarritor3
- */
-
 // Turns LED off on board
 void led_on() {
 	  HAL_GPIO_WritePin(led_GPIO_Port, led_Pin, GPIO_PIN_SET);

@@ -62,8 +62,8 @@ all: main-build
 main-build: guitar-actuator-board.elf secondary-outputs
 
 # Tool invocations
-guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) /Users/lukefarritor/Documents/Github/guitar-actuator/STM32F030F4PX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"/Users/lukefarritor/Documents/Github/guitar-actuator/STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+guitar-actuator-board.elf: $(OBJS) $(USER_OBJS) C:\Users\Luke\ Farritor\Documents\GitHub\guitar-actuator\STM32F030F4PX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "guitar-actuator-board.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m0 -T"C:\Users\Luke Farritor\Documents\GitHub\guitar-actuator\STM32F030F4PX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-actuator-board.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

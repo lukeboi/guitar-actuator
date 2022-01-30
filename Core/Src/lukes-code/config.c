@@ -6,7 +6,7 @@
 
 bool config_struct_equal(config_t a, config_t b);
 
-__attribute__((__section__(".user_data"))) config_t flash_config;
+__attribute__((__section__(".user_data"))) config_t flash_config; // see linking file
 config_t ram_config; // Ram config is stored in ram (as opposed to flash)
 
 // Loads config from flash and into ram
@@ -14,7 +14,9 @@ void init_config() {
 	// When code is uploaded, if you want to preserve past settings then make overwrite_config false.
 	// If you want to set new settings, set them here and make overwrite_config true.
 	bool overwrite_config = true;
-	ram_config.note = 35;
+	ram_config.note = 0;
+//	ram_config.strummed_on_position = 40000;
+//	ram_config.strummed_off_position = 13000;
 	ram_config.strummed_on_position = flash_config.strummed_on_position;
 	ram_config.strummed_off_position = flash_config.strummed_on_position;
 
@@ -28,11 +30,6 @@ void init_config() {
 // If you want to change the config in flash, change ram config and call this function.
 void Write_Flash()
 {
-	// Only write to flash if our config files differ
-//	if(config_struct_equal(ram_config, flash_config)) {
-//		return;
-//	}
-
     HAL_FLASH_Unlock();
 
     int startAddress = 0x08003c00;

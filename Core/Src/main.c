@@ -64,6 +64,7 @@ void blink(int x);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 extern message_state_t state;
+extern config_t ram_config;
 /* USER CODE END 0 */
 
 /**
@@ -103,6 +104,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   init_config();
   blink(3);
+
+  // blink extra to indicate if note is not assigned
+  if (ram_config.note == 0) {
+	  blink(7);
+  }
+
   toggle_led();
   strum();
 
